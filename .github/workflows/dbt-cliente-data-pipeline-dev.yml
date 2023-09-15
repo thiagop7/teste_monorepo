@@ -1,0 +1,50 @@
+name: Test Update Submodule
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  validation_on_merge_dev:
+    runs-on: ubuntu-22.04
+    environment: develop
+    env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+        actions: write
+        checks: write
+        contents: write
+        deployments: write
+        id-token: write
+        issues: write
+        discussions: write
+        packages: write
+        pages: write
+        pull-requests: write
+        repository-projects: write
+        security-events: write
+        statuses: write        
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip          
+          echo "======== WILL ENVIRONMENT ========="
+          echo ${{vars.ENVIRONMENT_THI}}      
+
+      - name: Update Submodule teste
+        run: |
+            git checkout dev
+            git submodule update --init teste_submodule
+
+      - name: Commit and push changes
+        run: |
+            git config --global user.name "Thiago Pereira"
+            git config --global user.email "thiago.pereira.net@gmail.com"
+            git add .
+            git commit -m "Update Submodule teste"
+            git push           
